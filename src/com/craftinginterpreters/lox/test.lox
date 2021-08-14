@@ -1,5 +1,5 @@
-fun scope() {
-   var b = 1;
+class Foo {
+  init() {
+    return "something else";
+  }
 }
-
-scope();
