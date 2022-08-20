@@ -326,11 +326,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             arguments.add(evaluate(argument));
         }
 
-        if (!(callee instanceof LoxCallable)) {
+        if (!(callee instanceof LoxCallable function)) {
             throw new RuntimeError(expr.paren,
                     "Can only call functions and classes.");
         }
-        LoxCallable function = (LoxCallable)callee;
 
         if (arguments.size() != function.arity()) {
             throw new RuntimeError(expr.paren, "Expected " +
@@ -344,6 +343,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 
     private boolean isEqual(Object a, Object b) {
+        // TODO
+        // JVM doesn't correctly implement IEEE equality on boxed doubles. This is bad,
+        // I should find a way to avoid conversions here.
+        if (a instanceof Number) {
+            double d = ((Number) a).doubleValue();
+            if (Double.isNaN(d)) {
+                return false;
+            }
+        }
+        if (b instanceof Number) {
+            double d = ((Number) b).doubleValue();
+            if (Double.isNaN(d)) {
+                return false;
+            }
+        }
         if (a == null && b == null) return true;
         if (a == null) return false;
 
